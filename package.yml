@@ -1,0 +1,18 @@
+package: community.lazycat.app.directory-lister
+name: directory-lister
+version: 5.8.3
+description: "Browse and share the contents of any web-accessible folder with a clean, zero-configuration file listing."
+min_os_version: "1.5.0"
+homepage: https://github.com/DirectoryLister/DirectoryLister
+author: DirectoryLister
+license: MIT
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: Directory Lister 目录列表
+    description: "零配置的网页目录列表工具：把任意文件夹变成美观可浏览、可分享的文件列表，支持 README 渲染与打包下载。"
+  en:
+    name: Directory Lister
+    description: "The easiest way to expose the contents of any web-accessible folder for browsing and sharing."

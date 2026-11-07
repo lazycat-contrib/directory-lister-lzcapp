@@ -1,0 +1,43 @@
+application:
+  subdomain: directory-lister
+  multi_instance: false
+  # Directory Lister has no user accounts or login at all (pure public file
+  # browser), so it must NOT be exposed via public_path; the platform login
+  # gate stays the only line of defense.
+  upstreams:
+    - location: /package-licenses/
+      backend: file:///lzcapp/pkg/content/licenses/
+    - location: /
+      backend: http://directory-lister:80/
+services:
+  directory-lister:
+    # upstream: directorylister/directorylister:5.8.3
+    image: docker.1ms.run/directorylister/directorylister:5.8.3
+    environment:
+      # cache driver: file is the upstream default; array is always valid with
+      # no extra options and avoids any writable-cache-dir edge cases.
+      - CACHE_DRIVER=array
+      - FILES_PATH=/data
+      - TZ=Asia/Shanghai
+    binds:
+      - /lzcapp/var/data:/data
+usage: |
+  Directory Lister 是一个零配置的网页目录列表工具：把任意文件夹变成
+  美观、可浏览、可分享的文件列表，支持 README 渲染、多语言与 ZIP 打包下载。
+
+  使用方法：
+  1. 把要分享的文件放进应用的 /data 目录（本包对应 /lzcapp/var/data），
+     打开应用即可浏览。
+  2. 子目录里可以放 README.md，会在页面上自动渲染展示。
+  3. 文件列表支持排序、搜索与一键 ZIP 下载（ZIP_DOWNLOADS 默认开启）。
+  4. 可选配置（APP_LANGUAGE / SORT_ORDER / DISPLAY_READMES 等）见官方文档：
+     https://docs.directorylister.com
+
+  数据与安全：
+  - 本应用自身没有任何账号与登录机制（纯公开的文件浏览器），
+    因此本包不对外开放未登录访问（保持平台入口鉴权）。
+    请注意：放入 /data 的内容对所有能通过平台鉴权打开该应用的用户可见。
+  - 文件保存在 /lzcapp/var/data，卸载应用会一并删除，请定期备份。
+
+  说明：
+  - 本包未做实机验证，功能以官方文档为准，遇到问题请反馈。
